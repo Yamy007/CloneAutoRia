@@ -162,10 +162,12 @@ class ActivateAdvertisement(GenericAPIView):
             pass
         if profanity.contains_profanity(advertisement.info):
             counter = CounterCheck.objects.filter(advertisement=advertisement).first()
-            if counter.is_send:
+
+            if counter and counter.is_send:
                 return Response(
                     {"detail": "Email send pls wait"}, status=status.HTTP_200_OK
                 )
+
             if counter and counter.count < 3:
                 setattr(counter, "count", counter.count + 1)
                 counter.save()
